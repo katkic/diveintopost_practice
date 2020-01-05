@@ -212,6 +212,7 @@ ja:
       failed_to_assign: 'アサインに失敗しました！'
       cannot_delete_the_leader: 'リーダーは削除できません。'
       cannot_delete_only_a_member: 'このユーザーはこのチームにしか所属していないため、削除できません。'
+      cannot_delete_member_only_owner_or_salf: '権限がないため、削除できません'
       delete_member: 'メンバーを削除しました。'
       cannot_delete_member_4_some_reason: 'なんらかの原因で、削除できませんでした。'
       failed_to_post: '投稿できませんでした...'
