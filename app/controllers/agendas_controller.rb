@@ -1,5 +1,5 @@
 class AgendasController < ApplicationController
-  # before_action :set_agenda, only: %i[show edit update destroy]
+  before_action :set_agenda, only: %i[destroy]
 
   def index
     @agendas = Agenda.all
@@ -21,6 +21,11 @@ class AgendasController < ApplicationController
     end
   end
 
+  def destroy
+    destroy_message = agenda_destroy(@agenda)
+    redirect_to dashboard_url, notice: destroy_message
+  end
+
   private
 
   def set_agenda
@@ -29,5 +34,15 @@ class AgendasController < ApplicationController
 
   def agenda_params
     params.fetch(:agenda, {}).permit %i[title description]
+  end
+
+  def agenda_destroy(agenda)
+    if !(agenda.user_id == current_user.id || agenda.team.owner_id == current_user.id)
+      'アジェンダを削除する権限がありません'
+    elsif agenda.destroy
+      "アジェンダ「#{agenda.title}」を削除しました"
+    else
+      'アジェンダの削除に失敗しました'
+    end
   end
 end
