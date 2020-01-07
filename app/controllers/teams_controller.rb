@@ -48,6 +48,12 @@ class TeamsController < ApplicationController
     @team = current_user.keep_team_id ? Team.find(current_user.keep_team_id) : current_user.teams.first
   end
 
+  def change
+    assign = Assign.find(params[:id])
+    change_owner(assign)
+    redirect_to @team, notice: "リーダー権限を「#{assign.user.email}」に移動しました"
+  end
+
   private
 
   def set_team
@@ -62,5 +68,12 @@ class TeamsController < ApplicationController
     unless @team.owner_id == current_user.id
       redirect_to teams_path, notice: '権限がないため、編集できません'
     end
+  end
+
+  def change_owner(assign)
+    @team = assign.team
+    @team.update(owner_id: assign.user_id)
+    email = assign.user.email
+    TeamMailer.change_owner_mail(email, @team.name).deliver
   end
 end
