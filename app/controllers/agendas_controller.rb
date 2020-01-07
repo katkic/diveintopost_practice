@@ -40,6 +40,9 @@ class AgendasController < ApplicationController
     if !(agenda.user_id == current_user.id || agenda.team.owner_id == current_user.id)
       'アジェンダを削除する権限がありません'
     elsif agenda.destroy
+      agenda.team.members.each do |member|
+        AgendaMailer.delete_agenda_mail(member.email, agenda).deliver
+      end
       "アジェンダ「#{agenda.title}」を削除しました"
     else
       'アジェンダの削除に失敗しました'
